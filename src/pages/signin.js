@@ -1,7 +1,7 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
 import { navigate } from 'gatsby';
-import {useLocalStorage} from '@rehooks/local-storage';
+import useLocalStorage from '../hooks/useLocalStorage';
 import Logo from '../components/Logo';
 import Main from '../layouts/Main';
 import config from '../utils/config';

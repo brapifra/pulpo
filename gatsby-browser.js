@@ -11,9 +11,8 @@ import React from "react"
 import Helmet from 'react-helmet';
 import ApolloClient from 'apollo-boost';
 import { ApolloProvider } from '@apollo/react-hooks';
-import { useLocalStorage } from '@rehooks/local-storage';
+import useLocalStorage from './src/hooks/useLocalStorage';
 import './src/styles/lit.css';
-
 
 
 export const wrapRootElement = ({ element }) => {

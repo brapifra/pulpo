@@ -1,6 +1,6 @@
 import React from 'react';
 import { navigate } from 'gatsby';
-import {useLocalStorage} from '@rehooks/local-storage';
+import useLocalStorage from '../hooks/useLocalStorage';
 import useGithubData from '../hooks/useGithubData';
 import Logo from '../components/Logo';
 import '../styles/index.css';
