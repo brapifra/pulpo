@@ -8,15 +8,22 @@
 
 
 import React from "react"
+import Helmet from 'react-helmet';
 import ApolloClient from 'apollo-boost';
 import { ApolloProvider } from '@apollo/react-hooks';
 import { useLocalStorage } from '@rehooks/local-storage';
+import './src/styles/lit.css';
 
 
 
 export const wrapRootElement = ({ element }) => {
   return (
     <Wrapper>
+      <Helmet>
+        <title>Pulpo - Personal github statistics</title>
+        <link href="https://fonts.googleapis.com/css?family=Nunito:300,400,700" rel="stylesheet" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ajusa/lit@latest/dist/lit.css" />
+      </Helmet>
       {element}
     </Wrapper>
   )

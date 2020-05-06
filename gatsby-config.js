@@ -7,10 +7,10 @@ module.exports = {
     {
       resolve: `gatsby-plugin-manifest`,
       options: {
-        name: 'Gatsby + Node.js (TypeScript) API',
-        short_name: 'Gatsby + Node.js (TypeScript)',
+        name: 'Pulpo - Personal github statistics',
+        short_name: 'Pulpo - Personal github statistics',
         start_url: '/',
-        icon: 'src/images/gatsby-icon.png',
+        icon: 'src/images/pulpo.gif',
       },
     },
   ],

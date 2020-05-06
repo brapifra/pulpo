@@ -1,14 +1,10 @@
 import React from 'react';
-import { Helmet } from 'react-helmet';
-import '../styles/index.css';
-import { useGithubAccessToken } from './signin';
 import { navigate } from 'gatsby';
 import {useLocalStorage} from '@rehooks/local-storage';
 import useGithubData from '../hooks/useGithubData';
-
-const GITHUB_CLIENT_ID = '***REMOVED***';
-const GITHUB_REDIRECT_URI= 'http://localhost:3000/oauth/github';
-const GITHUB_AUTHORIZE_URL= `https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}&redirect_uri=${GITHUB_REDIRECT_URI}&scope=repo,user:email`;
+import Logo from '../components/Logo';
+import '../styles/index.css';
+import Main from '../layouts/Main';
 
 export default () => {
   const [ghToken] = useLocalStorage('githubAccessToken');
@@ -30,12 +26,9 @@ export default () => {
   }, [data]);
 
   return (
-    <main>
-      <Helmet>
-        <title>Pulpo</title>
-      </Helmet>
-      <h1>Pulpo</h1>
-      <button onClick={fetchGithubData} disabled={loading || error || data}>Fetch</button>
+    <Main>
+      <Logo />
+      <button className="btn" onClick={fetchGithubData} disabled={loading || error || data}>Get statistics</button>
       {aggregatedData && (
         <>
           <p>PRs: {data.viewer.pullRequests.totalCount}</p>
@@ -47,6 +40,6 @@ export default () => {
       )}
       {loading && <p>Loading...</p>}
       {error && <p>Error...</p>}
-    </main>
+    </Main>
   );
 }
