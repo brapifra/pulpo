@@ -4,9 +4,10 @@ import { navigate } from 'gatsby';
 import {useLocalStorage} from '@rehooks/local-storage';
 import Logo from '../components/Logo';
 import Main from '../layouts/Main';
+import config from '../utils/config';
 
 const GITHUB_CLIENT_ID = '***REMOVED***';
-const GITHUB_REDIRECT_URI= 'http://localhost:3000/oauth/github';
+const GITHUB_REDIRECT_URI= `${config.url}/oauth/github`;
 const GITHUB_AUTHORIZE_URL= `https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}&redirect_uri=${GITHUB_REDIRECT_URI}&scope=repo,user:email`;
 
 
