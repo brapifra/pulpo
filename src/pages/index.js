@@ -10,9 +10,11 @@ export default () => {
   const [ghToken] = useLocalStorage('githubAccessToken');
   const [{ data, loading, error }, fetchGithubData] = useGithubData();
 
-  if(!ghToken) {
-    navigate('/signin');
-  }
+  React.useEffect(() => {
+    if(!ghToken) {
+      navigate('/signin');
+    }
+  }, [ghToken]);
   
   const aggregatedData = React.useMemo(() => {
     if(!data) {
