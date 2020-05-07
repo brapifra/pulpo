@@ -40,8 +40,8 @@ export default () => {
           <p>Average size of PRs: {(aggregatedData.additions + aggregatedData.deletions)/data.viewer.pullRequests.totalCount}</p>
         </>
       )}
-      {loading && <p>Loading...</p>}
-      {error && <p>Error...</p>}
+      {loading && <p>Fetching data... This may take a while</p>}
+      {error && <p>Something happened: {error.message}</p>}
     </Main>
   );
 }
