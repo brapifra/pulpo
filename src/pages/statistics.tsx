@@ -14,6 +14,7 @@ type AggregatedData = {
 
 export default () => {
   const { data, loading, error } = useGithubData();
+  const hasMoreToFetch = !!data?.viewer?.pullRequests?.pageInfo?.hasNextPage;
 
   const aggregatedData: AggregatedData = React.useMemo(() => {
     const initialValue: AggregatedData = {
@@ -64,7 +65,9 @@ export default () => {
           </Link>
         </>
       )}
-      {loading && <p>Fetching data... This may take a while</p>}
+      {(loading || hasMoreToFetch) && (
+        <p>Fetching data... This may take a while</p>
+      )}
       <div className="responsiveGrid">
         <Card
           title={data?.viewer?.pullRequests?.totalCount || 0}
@@ -87,9 +90,7 @@ export default () => {
 };
 
 function useGithubData() {
-  const queryResult = useQuery(query, {
-    notifyOnNetworkStatusChange: true,
-  });
+  const queryResult = useQuery(query);
   const { data, loading, error, fetchMore } = queryResult;
 
   React.useEffect(() => {
