@@ -43,15 +43,7 @@ export default () => {
       )}
       {loading && <p>Fetching data... This may take a while</p>}
       {aggregatedData && (
-        <div
-          style={{
-            overflowX: "auto",
-            display: "flex",
-            flexDirection: "row",
-            maxWidth: "90%",
-            alignItems: "center",
-          }}
-        >
+        <div className="responsiveGrid">
           <Card
             title={data.viewer.pullRequests.totalCount}
             description="PRs created"

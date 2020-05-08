@@ -1,19 +1,16 @@
 import React from "react";
 
-export default ({
-  title,
-  description,
-}: {
-  title: string | number;
+interface Props {
+  title: number;
   description: string;
-}) => {
+}
+
+export default ({ title, description }: Props) => {
   return (
-    <div
-      className="card"
-      style={{ minWidth: 250, marginRight: 16, boxSizing: "content-box" }}
-    >
-      <img src="https://picsum.photos/400/300/?random" className="w-100" />
-      <h4>{title}</h4>
+    <div className="card" style={{ minWidth: 0, boxSizing: "content-box" }}>
+      <h4>
+        <b>{title.toLocaleString("en")}</b>
+      </h4>
       <p>{description}</p>
     </div>
   );

@@ -4,3 +4,17 @@ body, #gatsby-focus-wrapper {
   width: 100vw;
   overflow: hidden;
 }
+
+.responsiveGrid {
+  display: grid;
+  align-items: center;
+  grid-template-columns: 1fr;
+  width: 80%;
+}
+
+@media only screen and (min-width: 768px) {
+  .responsiveGrid {
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-column-gap: 14px;
+  }
+}
