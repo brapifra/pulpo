@@ -6,7 +6,7 @@ import useLocalStorage from "../hooks/useLocalStorage";
 import Logo from "../components/Logo";
 import Main from "../layouts/Main";
 
-***REMOVED***
+const GITHUB_CLIENT_ID = "***REMOVED***";
 
 export default () => {
   const [_, setToken] = useLocalStorage("githubAccessToken");

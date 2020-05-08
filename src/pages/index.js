@@ -7,7 +7,7 @@ import "../styles/index.css";
 import Main from "../layouts/Main";
 
 export default () => {
-  const [ghToken] = useLocalStorage("githubAccessToken");
+  const [ghToken, _, removeGhToken] = useLocalStorage("githubAccessToken");
   const [{ data, loading, error }, fetchGithubData] = useGithubData();
 
   React.useEffect(() => {
@@ -34,13 +34,30 @@ export default () => {
   return (
     <Main>
       <Logo />
-      <button
-        className="btn"
-        onClick={fetchGithubData}
-        disabled={loading || error || data}
-      >
-        Get statistics
-      </button>
+      {!error ? (
+        <button
+          className="btn"
+          onClick={fetchGithubData}
+          disabled={loading || error || data}
+        >
+          Get statistics
+        </button>
+      ) : (
+        <>
+          <p style={{ textAlign: "center" }}>
+            Something happened: <p style={{ color: "red" }}>{error.message}</p>
+          </p>
+          <button
+            className="btn"
+            onClick={() => {
+              removeGhToken();
+              navigate("/signin");
+            }}
+          >
+            Re-connect your github account
+          </button>
+        </>
+      )}
       {aggregatedData && (
         <>
           <p>PRs: {data.viewer.pullRequests.totalCount}</p>
@@ -58,7 +75,6 @@ export default () => {
         </>
       )}
       {loading && <p>Fetching data... This may take a while</p>}
-      {error && <p>Something happened: {error.message}</p>}
     </Main>
   );
 };

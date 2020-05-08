@@ -1,9 +1,9 @@
 import { NowRequest, NowResponse } from "@now/node";
 import fetch from "node-fetch";
 
-***REMOVED***
-***REMOVED***
-***REMOVED***
+const GITHUB_CLIENT_ID = "***REMOVED***";
+const GITHUB_CLIENT_SECRET = "***REMOVED***";
+const GITHUB_GET_TOKEN_URL = `***REMOVED***`;
 
 export default async (_req: NowRequest, res: NowResponse) => {
   const response = await fetch(GITHUB_GET_TOKEN_URL, {

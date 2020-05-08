@@ -85,7 +85,8 @@ export default function useGithubData() {
       setLoading(false);
       setDataInState(finalData);
     } catch (e) {
-      console.log(e);
+      console.error(e);
+      setLoading(false);
       setError(e);
     }
   }
