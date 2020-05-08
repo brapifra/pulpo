@@ -5,6 +5,7 @@ import useGithubData from "../hooks/useGithubData";
 import Logo from "../components/Logo";
 import "../styles/index.css";
 import Main from "../layouts/Main";
+import Card from "../components/Card";
 
 export default () => {
   const [ghToken, _, removeGhToken] = useLocalStorage("githubAccessToken");
@@ -34,7 +35,7 @@ export default () => {
   return (
     <Main>
       <Logo />
-      {!error ? (
+      {!error && !aggregatedData && (
         <button
           className="btn"
           onClick={fetchGithubData}
@@ -42,7 +43,8 @@ export default () => {
         >
           Get statistics
         </button>
-      ) : (
+      )}
+      {error && (
         <>
           <p style={{ textAlign: "center" }}>
             Something happened: <p style={{ color: "red" }}>{error.message}</p>
@@ -58,23 +60,36 @@ export default () => {
           </button>
         </>
       )}
-      {aggregatedData && (
-        <>
-          <p>PRs: {data.viewer.pullRequests.totalCount}</p>
-          <p>Additions: {aggregatedData.additions}</p>
-          <p>Deletions: {aggregatedData.deletions}</p>
-          <p>
-            Lines of code changed:{" "}
-            {aggregatedData.additions + aggregatedData.deletions}
-          </p>
-          <p>
-            Average size of PRs:{" "}
-            {(aggregatedData.additions + aggregatedData.deletions) /
-              data.viewer.pullRequests.totalCount}
-          </p>
-        </>
-      )}
       {loading && <p>Fetching data... This may take a while</p>}
+      {aggregatedData && (
+        <div
+          style={{
+            overflowX: "auto",
+            display: "flex",
+            flexDirection: "row",
+            maxWidth: "90%",
+            alignItems: "center",
+          }}
+        >
+          <Card
+            title={data.viewer.pullRequests.totalCount}
+            description="PRs created"
+          />
+          <Card
+            title={aggregatedData.additions + aggregatedData.deletions}
+            description="Lines changed"
+          />
+          <Card title={aggregatedData.additions} description="Additions" />
+          <Card title={aggregatedData.deletions} description="Deletions" />
+          <Card
+            title={Math.round(
+              (aggregatedData.additions + aggregatedData.deletions) /
+                data.viewer.pullRequests.totalCount
+            )}
+            description="Average PR size"
+          />
+        </div>
+      )}
     </Main>
   );
 };
