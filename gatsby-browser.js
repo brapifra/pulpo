@@ -11,6 +11,7 @@ import Helmet from "react-helmet";
 import ApolloClient from "apollo-boost";
 import { ApolloProvider } from "@apollo/react-hooks";
 import useLocalStorage from "./src/hooks/useLocalStorage";
+import Config from "./src/config";
 import "./src/styles/lit.css";
 
 export const wrapRootElement = ({ element }) => {
@@ -36,7 +37,7 @@ function Wrapper({ children }) {
   const [githubAccessToken] = useLocalStorage("githubAccessToken");
   const client = React.useMemo(() => {
     return new ApolloClient({
-      uri: "https://api.github.com/graphql",
+      uri: Config.GITHUB_GRAPHQL_ENDPOINT,
       request: (operation) => {
         operation.setContext({
           headers: {

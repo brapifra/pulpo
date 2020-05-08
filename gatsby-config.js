@@ -3,6 +3,17 @@ module.exports = {
     title: "Pulpo - Personal github statistics",
   },
   plugins: [
+    {
+      resolve: `gatsby-plugin-env-variables`,
+      options: {
+        whitelist: [
+          "GITHUB_CLIENT_ID",
+          "GITHUB_AUTHORIZE_URL",
+          "GITHUB_GRAPHQL_ENDPOINT",
+          "URL",
+        ],
+      },
+    },
     `gatsby-plugin-typescript`,
     `gatsby-plugin-react-helmet`,
     {

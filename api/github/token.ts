@@ -1,16 +1,13 @@
 import { NowRequest, NowResponse } from "@now/node";
+import Config from "../../src/config";
 import fetch from "node-fetch";
 
-const GITHUB_CLIENT_ID = "***REMOVED***";
-const GITHUB_CLIENT_SECRET = "***REMOVED***";
-const GITHUB_GET_TOKEN_URL = `***REMOVED***`;
-
 export default async (_req: NowRequest, res: NowResponse) => {
-  const response = await fetch(GITHUB_GET_TOKEN_URL, {
+  const response = await fetch(Config.GITHUB_GET_TOKEN_URL!, {
     method: "POST",
     body: JSON.stringify({
-      client_id: GITHUB_CLIENT_ID,
-      client_secret: GITHUB_CLIENT_SECRET,
+      client_id: Config.GITHUB_CLIENT_ID,
+      client_secret: Config.GITHUB_CLIENT_SECRET,
       code: _req.query.code,
     }),
     headers: { Accept: "application/json", "Content-type": "application/json" },

@@ -1,16 +1,16 @@
 import React from "react";
 import { Helmet } from "react-helmet";
 import { navigate } from "gatsby";
-import { useLocation } from "@reach/router";
 import useLocalStorage from "../hooks/useLocalStorage";
 import Logo from "../components/Logo";
 import Main from "../layouts/Main";
+import Config from "../config";
 
-const GITHUB_CLIENT_ID = "***REMOVED***";
+const GITHUB_REDIRECT_URL = `${Config.URL}/oauth/github`;
+const GITHUB_AUTHORIZE_URL = `${Config.GITHUB_AUTHORIZE_URL}?client_id=${Config.GITHUB_CLIENT_ID}&redirect_uri=${GITHUB_REDIRECT_URL}&scope=repo,user:email`;
 
 export default () => {
   const [_, setToken] = useLocalStorage("githubAccessToken");
-  const location = useLocation();
 
   return (
     <Main>
@@ -21,10 +21,8 @@ export default () => {
       <button
         className="btn"
         onClick={() => {
-          const githubRedirectUri = `${location.protocol}//${location.host}/oauth/github`;
-          const githubAuthorizeUrl = `https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}&redirect_uri=${githubRedirectUri}&scope=repo,user:email`;
           const popup = window.open(
-            githubAuthorizeUrl,
+            GITHUB_AUTHORIZE_URL,
             "",
             "width=500,height=650"
           );
