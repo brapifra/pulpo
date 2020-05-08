@@ -5,6 +5,10 @@ body, #gatsby-focus-wrapper {
   overflow: hidden;
 }
 
+#gatsby-focus-wrapper {
+  overflow-y: auto;
+}
+
 .responsiveGrid {
   display: grid;
   align-items: center;

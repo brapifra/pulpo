@@ -5,25 +5,48 @@ import Main from "../layouts/Main";
 import { useQuery } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
 
-type AggregatedData = { additions: number; deletions: 0 };
+type AggregatedData = {
+  additions: number;
+  deletions: number;
+  changedLines: number;
+  avgPrSize: number;
+};
 
 export default () => {
   const { data, loading, error } = useGithubData();
 
-  const aggregatedData = React.useMemo(() => {
+  const aggregatedData: AggregatedData = React.useMemo(() => {
+    const initialValue: AggregatedData = {
+      additions: 0,
+      deletions: 0,
+      changedLines: 0,
+      avgPrSize: 0,
+    };
+
     if (!data) {
-      return;
+      return initialValue;
     }
 
     return data.viewer.pullRequests.edges.reduce(
-      (acc: AggregatedData, { node }: any) => ({
-        ...acc,
-        additions: acc.additions + node.additions,
-        deletions: acc.deletions + node.deletions,
-      }),
-      { additions: 0, deletions: 0 }
+      (acc: AggregatedData, { node }: any): AggregatedData => {
+        const additions = acc.additions + node.additions;
+        const deletions = acc.deletions + node.deletions;
+        const changedLines = additions + deletions;
+        const totalPrs = data?.viewer?.pullRequests?.totalCount || 0;
+
+        return {
+          ...acc,
+          additions,
+          deletions,
+          changedLines,
+          avgPrSize: Math.round(changedLines / totalPrs),
+        };
+      },
+      initialValue
     );
   }, [data]);
+
+  const edges = data?.viewer?.pullRequests?.edges || [];
 
   return (
     <Main>
@@ -42,27 +65,23 @@ export default () => {
         </>
       )}
       {loading && <p>Fetching data... This may take a while</p>}
-      {aggregatedData && (
-        <div className="responsiveGrid">
-          <Card
-            title={data.viewer.pullRequests.totalCount}
-            description="PRs created"
-          />
-          <Card
-            title={aggregatedData.additions + aggregatedData.deletions}
-            description="Lines changed"
-          />
-          <Card title={aggregatedData.additions} description="Additions" />
-          <Card title={aggregatedData.deletions} description="Deletions" />
-          <Card
-            title={Math.round(
-              (aggregatedData.additions + aggregatedData.deletions) /
-                data.viewer.pullRequests.totalCount
-            )}
-            description="Average PR size"
-          />
-        </div>
-      )}
+      <div className="responsiveGrid">
+        <Card
+          title={data?.viewer?.pullRequests?.totalCount || 0}
+          description="PRs created"
+        />
+        <Card
+          title={formatDate(edges[edges.length - 1]?.node?.createdAt)}
+          description="Oldest PR"
+        />
+        <Card
+          title={aggregatedData.additions + aggregatedData.deletions}
+          description="Lines changed"
+        />
+        <Card title={aggregatedData.additions} description="Additions" />
+        <Card title={aggregatedData.deletions} description="Deletions" />
+        <Card title={aggregatedData.avgPrSize} description="Average PR size" />
+      </div>
     </Main>
   );
 };
@@ -131,6 +150,7 @@ const query = gql`
           cursor
           node {
             title
+            createdAt
             additions
             deletions
           }
@@ -139,3 +159,11 @@ const query = gql`
     }
   }
 `;
+
+function formatDate(dateString?: string) {
+  if (!dateString) {
+    return "...";
+  }
+
+  return new Date(dateString).toLocaleDateString();
+}
