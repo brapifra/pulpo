@@ -1,29 +1,27 @@
-import React from 'react';
-import { useLocation } from '@reach/router';
+import React from "react";
+import { useLocation } from "@reach/router";
 
-export default function() {
+export default function () {
   const location = useLocation();
-  const [status, setStatus] = React.useState('Loading...');
+  const [status, setStatus] = React.useState("Loading...");
 
-  const code  = React.useMemo(() => new URLSearchParams(location.search).get('code'), [location.search]);
+  const code = React.useMemo(
+    () => new URLSearchParams(location.search).get("code"),
+    [location.search]
+  );
 
   React.useEffect(() => {
-    if(!code) {
-      setStatus('Error!');
-    }else {
+    if (!code) {
+      setStatus("Error!");
+    } else {
       fetch(`/api/github/token?code=${code}`)
-        .then(res => res.json())
-        .then(res => {
-          window.postMessage({ type: 'close', data: res }, '*')
+        .then((res) => res.json())
+        .then((res) => {
+          window.postMessage({ type: "close", data: res }, "*");
         })
-        .catch(error => setStatus(`Error: ${error.message}`));
+        .catch((error) => setStatus(`Error: ${error.message}`));
     }
   }, [code]);
-  
-  return (
-    <main>
-      {status}
-    </main>
-  );
-}
 
+  return <main>{status}</main>;
+}

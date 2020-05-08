@@ -3,7 +3,7 @@ import lottie from "lottie-web";
 import animation from "../images/pulpo.json";
 
 export default () => {
-  let animationContainer = createRef();
+  const animationContainer = createRef();
 
   useEffect(() => {
     const anim = lottie.loadAnimation({
@@ -11,12 +11,12 @@ export default () => {
       renderer: "svg",
       loop: true,
       autoplay: true,
-      animationData: animation
+      animationData: animation,
     });
     return () => anim.destroy();
   }, []);
 
   return (
-        <div style={{ width: '50%', maxWidth: 500 }} ref={animationContainer} />
+    <div style={{ width: "50%", maxWidth: 500 }} ref={animationContainer} />
   );
 };

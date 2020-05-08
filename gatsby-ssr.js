@@ -6,5 +6,5 @@
 
 // You can delete this file if you're not using it
 
-require('isomorphic-fetch');
-export { wrapRootElement } from './gatsby-browser';
+require("isomorphic-fetch");
+export { wrapRootElement } from "./gatsby-browser";
