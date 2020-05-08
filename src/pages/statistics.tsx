@@ -86,7 +86,7 @@ export default () => {
         <Card title={aggregatedData.deletions} description="Deletions" />
         <Card title={aggregatedData.avgPrSize} description="Average PR size" />
       </div>
-      <ShareButton login={data?.viewer?.login || ""} />
+      <ShareButton user={data?.viewer?.login || ""} />
     </Main>
   );
 };
