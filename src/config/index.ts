@@ -1,8 +1,6 @@
 export default {
-  VERCEL_URL: process.env.VERCEL_URL || "http://localhost:3000",
+  URL: process.env.URL || "http://localhost:3000",
   GITHUB_CLIENT_ID: process.env.GITHUB_CLIENT_ID,
-  GITHUB_CLIENT_SECRET: process.env.GITHUB_CLIENT_SECRET,
-  GITHUB_GET_TOKEN_URL: process.env.GITHUB_GET_TOKEN_URL,
   GITHUB_AUTHORIZE_URL: process.env.GITHUB_AUTHORIZE_URL,
   GITHUB_GRAPHQL_ENDPOINT: process.env.GITHUB_GRAPHQL_ENDPOINT,
 };
