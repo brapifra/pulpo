@@ -1,6 +1,5 @@
 import React from "react";
 import { Helmet } from "react-helmet";
-import { navigate } from "gatsby";
 import useLocalStorage from "../hooks/useLocalStorage";
 import Logo from "../components/Logo";
 import Main from "../layouts/Main";
@@ -31,7 +30,7 @@ export default () => {
             if (evt.data.type === "close") {
               popup.close();
               setToken(evt.data.data.access_token);
-              navigate("/");
+              window.location.pathname = "/";
             }
           });
         }}
