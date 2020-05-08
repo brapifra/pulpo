@@ -10,7 +10,7 @@ module.exports = {
           "GITHUB_CLIENT_ID",
           "GITHUB_AUTHORIZE_URL",
           "GITHUB_GRAPHQL_ENDPOINT",
-          "URL",
+          "VERCEL_URL",
         ],
       },
     },
