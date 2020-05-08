@@ -6,14 +6,13 @@ import Main from "../layouts/Main";
 import Config from "../config";
 
 const GITHUB_REDIRECT_URL = `${Config.URL}/oauth/github`;
-const GITHUB_AUTHORIZE_URL = `${Config.GITHUB_AUTHORIZE_URL}?client_id=${Config.GITHUB_CLIENT_ID}&redirect_uri=${GITHUB_REDIRECT_URL}&scope=repo,user:email`;
 
 console.log(Config);
 console.log(GITHUB_REDIRECT_URL);
-console.log(GITHUB_AUTHORIZE_URL);
 
 export default () => {
   const [_, setToken] = useLocalStorage("githubAccessToken");
+  const [repoScope, setRepoScope] = React.useState("repo");
 
   return (
     <Main>
@@ -21,11 +20,24 @@ export default () => {
         <title>Pulpo - Signin</title>
       </Helmet>
       <Logo />
-      <button
+      <select
+        value={repoScope}
+        onChange={({ target: { value } }) => {
+          setRepoScope(value);
+        }}
         className="btn"
+      >
+        <option value="public_repo">Public repositories</option>
+        <option value="repo">Public and private repositories</option>
+      </select>
+      <button
+        style={{ marginTop: 16 }}
+        className="btn primary"
         onClick={() => {
+          const githubAuthorizeUrl = `${Config.GITHUB_AUTHORIZE_URL}?client_id=${Config.GITHUB_CLIENT_ID}&redirect_uri=${GITHUB_REDIRECT_URL}&scope=${repoScope},user:email`;
+
           const popup = window.open(
-            GITHUB_AUTHORIZE_URL,
+            githubAuthorizeUrl,
             "",
             "width=500,height=650"
           );
