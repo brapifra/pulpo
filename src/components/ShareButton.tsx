@@ -17,7 +17,6 @@ export default () => {
   );
 
   if (!shareButtonTitle) {
-    console.log("jaja;lskdjf");
     setShareButtonTitle(defaultTitle);
   }
 
