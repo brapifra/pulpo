@@ -10,7 +10,7 @@ const defaultTitle = (() => {
   return "Include this in your CV";
 })();
 
-export default ({ email }: { email: string }) => {
+export default ({ user }: { user: string }) => {
   const [result, setResult] = React.useState<string>();
   const [shareButtonTitle, setShareButtonTitle] = useLocalStorage(
     "shareButtonTitle",
@@ -27,7 +27,7 @@ export default ({ email }: { email: string }) => {
       <button
         className="btn"
         onClick={() => {
-          ga("send", "event", shareButtonTitle, "click", email);
+          ga("send", "event", shareButtonTitle, "click", user);
           const result = "This feature is not supported yet.";
           setResult(
             `${result} You will have to ${
