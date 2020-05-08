@@ -17,7 +17,7 @@ export default function () {
       fetch(`/api/github/token?code=${code}`)
         .then((res) => res.json())
         .then((res) => {
-          window.postMessage({ type: "close", data: res }, "*");
+          window.opener.postMessage({ type: "close", data: res }, "*");
         })
         .catch((error) => setStatus(`Error: ${error.message}`));
     }

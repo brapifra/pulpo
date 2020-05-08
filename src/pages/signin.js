@@ -43,7 +43,7 @@ export default () => {
             "width=500,height=650"
           );
 
-          popup.addEventListener("message", (evt) => {
+          window.addEventListener("message", (evt) => {
             if (evt.data.type === "close") {
               popup.close();
               setToken(evt.data.data.access_token);
