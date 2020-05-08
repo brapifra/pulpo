@@ -4,6 +4,7 @@ import Card from "../components/Card";
 import Main from "../layouts/Main";
 import { useQuery } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
+import ShareButton from "../components/ShareButton";
 
 type AggregatedData = {
   additions: number;
@@ -85,6 +86,7 @@ export default () => {
         <Card title={aggregatedData.deletions} description="Deletions" />
         <Card title={aggregatedData.avgPrSize} description="Average PR size" />
       </div>
+      <ShareButton />
     </Main>
   );
 };
