@@ -25,14 +25,15 @@ export default () => {
         onChange={({ target: { value } }) => {
           setRepoScope(value);
         }}
-        className="btn"
+        style={{ border: "solid #eee" }}
+        className="card"
       >
         <option value="public_repo">Public repositories</option>
         <option value="repo">Public and private repositories</option>
       </select>
       <button
         style={{ marginTop: 16 }}
-        className="btn primary"
+        className="btn"
         onClick={() => {
           const githubAuthorizeUrl = `${Config.GITHUB_AUTHORIZE_URL}?client_id=${Config.GITHUB_CLIENT_ID}&redirect_uri=${GITHUB_REDIRECT_URL}&scope=${repoScope},user:email`;
 
