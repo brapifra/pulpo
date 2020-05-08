@@ -6,9 +6,6 @@ import Config from "../config";
 
 const GITHUB_REDIRECT_URL = `${Config.URL}/oauth/github`;
 
-console.log(Config);
-console.log(GITHUB_REDIRECT_URL);
-
 export default () => {
   const [_, setToken] = useLocalStorage("githubAccessToken");
   const [repoScope, setRepoScope] = React.useState("repo");
