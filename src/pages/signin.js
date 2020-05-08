@@ -8,6 +8,10 @@ import Config from "../config";
 const GITHUB_REDIRECT_URL = `${Config.VERCEL_URL}/oauth/github`;
 const GITHUB_AUTHORIZE_URL = `${Config.GITHUB_AUTHORIZE_URL}?client_id=${Config.GITHUB_CLIENT_ID}&redirect_uri=${GITHUB_REDIRECT_URL}&scope=repo,user:email`;
 
+console.log(Config);
+console.log(GITHUB_REDIRECT_URL);
+console.log(GITHUB_AUTHORIZE_URL);
+
 export default () => {
   const [_, setToken] = useLocalStorage("githubAccessToken");
 
