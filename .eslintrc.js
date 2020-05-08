@@ -29,6 +29,7 @@ module.exports = {
     'react/prop-types': 'off', // Disable prop-types as we use TypeScript for type checking
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/camelcase': 'off',
+    '@typescript-eslint/no-use-before-define': 'off',
     'react/display-name': 'off'
   },
   overrides: [

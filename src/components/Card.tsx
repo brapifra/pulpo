@@ -4,7 +4,7 @@ export default ({
   title,
   description,
 }: {
-  title: string;
+  title: string | number;
   description: string;
 }) => {
   return (

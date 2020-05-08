@@ -1,7 +1,6 @@
 import React from "react";
 import { Helmet } from "react-helmet";
 import useLocalStorage from "../hooks/useLocalStorage";
-import Logo from "../components/Logo";
 import Main from "../layouts/Main";
 import Config from "../config";
 
@@ -19,7 +18,6 @@ export default () => {
       <Helmet>
         <title>Pulpo - Signin</title>
       </Helmet>
-      <Logo />
       <select
         value={repoScope}
         onChange={({ target: { value } }) => {

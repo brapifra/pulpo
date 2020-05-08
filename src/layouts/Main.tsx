@@ -1,4 +1,5 @@
 import React from "react";
+import Logo from "../components/Logo";
 
 export default ({ children }) => {
   return (
@@ -12,6 +13,7 @@ export default ({ children }) => {
         alignItems: "center",
       }}
     >
+      <Logo />
       {children}
     </main>
   );
