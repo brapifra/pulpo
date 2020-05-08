@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "gatsby";
 import Card from "../components/Card";
 import Main from "../layouts/Main";
 import { useQuery } from "@apollo/react-hooks";
@@ -27,10 +28,18 @@ export default () => {
   return (
     <Main>
       {error && (
-        <p style={{ textAlign: "center" }}>
-          Something happened:{" "}
-          <div style={{ color: "red" }}>{error.message}</div>
-        </p>
+        <>
+          <p style={{ textAlign: "center" }}>
+            Something happened:{" "}
+            <div style={{ color: "red" }}>{error.message}</div>
+          </p>
+          <Link
+            to="/signin"
+            style={{ color: "black", textDecoration: "underline" }}
+          >
+            Re-connect your github account
+          </Link>
+        </>
       )}
       {loading && <p>Fetching data... This may take a while</p>}
       {aggregatedData && (
