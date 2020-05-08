@@ -86,7 +86,7 @@ export default () => {
         <Card title={aggregatedData.deletions} description="Deletions" />
         <Card title={aggregatedData.avgPrSize} description="Average PR size" />
       </div>
-      <ShareButton />
+      <ShareButton email={data?.viewer?.email || ""} />
     </Main>
   );
 };
@@ -138,7 +138,7 @@ const query = gql`
       remaining
     }
     viewer {
-      id
+      email
       pullRequests(
         first: 100
         orderBy: { field: CREATED_AT, direction: DESC }
