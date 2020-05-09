@@ -6,31 +6,47 @@ import { useQuery } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
 import ShareButton from "../components/ShareButton";
 
-type AggregatedData = {
+type PullRequestsAggregatedData = {
   additions: number;
   deletions: number;
   changedLines: number;
   avgPrSize: number;
+  firstPrDate?: string;
+  mergedPrs: number;
+};
+
+type IssueCommentsAggregatedata = {
+  commentsPerPr: { [prId: string]: number };
+  firstCommentDate?: string;
+  avgNumberOfCommentsPerPr: string;
 };
 
 export default () => {
   const { data, loading, error } = useGithubData();
-  const hasMoreToFetch = !!data?.viewer?.pullRequests?.pageInfo?.hasNextPage;
+  const hasMoreToFetch =
+    !!data?.viewer?.pullRequests?.pageInfo?.hasNextPage ||
+    !!data?.viewer?.issueComments?.pageInfo?.hasNextPage;
 
-  const aggregatedData: AggregatedData = React.useMemo(() => {
-    const initialValue: AggregatedData = {
+  const pullRequestsAggregatedData: PullRequestsAggregatedData = React.useMemo(() => {
+    const initialValue: PullRequestsAggregatedData = {
       additions: 0,
       deletions: 0,
       changedLines: 0,
       avgPrSize: 0,
+      mergedPrs: 0,
     };
 
     if (!data) {
       return initialValue;
     }
 
-    return data.viewer.pullRequests.edges.reduce(
-      (acc: AggregatedData, { node }: any): AggregatedData => {
+    const edges: any[] = data.viewer.pullRequests.edges;
+
+    return edges.reduce(
+      (
+        acc: PullRequestsAggregatedData,
+        { node }
+      ): PullRequestsAggregatedData => {
         const additions = acc.additions + node.additions;
         const deletions = acc.deletions + node.deletions;
         const changedLines = additions + deletions;
@@ -42,13 +58,56 @@ export default () => {
           deletions,
           changedLines,
           avgPrSize: Math.round(changedLines / totalPrs),
+          firstPrDate: edges[edges.length - 1]?.node?.createdAt,
+          mergedPrs: node.merged ? acc.mergedPrs + 1 : acc.mergedPrs,
         };
       },
       initialValue
     );
   }, [data]);
 
-  const edges = data?.viewer?.pullRequests?.edges || [];
+  const issueCommentsAggregatedData: IssueCommentsAggregatedata = React.useMemo(() => {
+    const initialValue: IssueCommentsAggregatedata = {
+      commentsPerPr: {},
+      avgNumberOfCommentsPerPr: "0",
+    };
+
+    if (!data) {
+      return initialValue;
+    }
+
+    const edges: any[] = data.viewer.issueComments.edges;
+
+    return edges.reduce(
+      (
+        acc: IssueCommentsAggregatedata,
+        { node }
+      ): IssueCommentsAggregatedata => {
+        if (!node.pullRequest) {
+          return acc;
+        }
+
+        const previousCount = acc.commentsPerPr[node.pullRequest.id] || 0;
+        const commentsPerPr = {
+          ...acc.commentsPerPr,
+          [node.pullRequest.id]: previousCount + 1,
+        };
+        const numberOfCommentsPerPr: number[] = Object.values(commentsPerPr);
+        const avgNumberOfCommentsPerPr = (
+          numberOfCommentsPerPr.reduce((acc, comments) => comments + acc, 0) /
+          numberOfCommentsPerPr.length
+        ).toFixed(2);
+
+        return {
+          ...acc,
+          firstCommentDate: edges[0]?.node?.createdAt,
+          commentsPerPr,
+          avgNumberOfCommentsPerPr,
+        };
+      },
+      initialValue
+    );
+  }, [data]);
 
   return (
     <Main>
@@ -75,24 +134,71 @@ export default () => {
           description="PRs created"
         />
         <Card
-          title={formatDate(edges[edges.length - 1]?.node?.createdAt)}
-          description="Oldest PR"
+          title={pullRequestsAggregatedData.mergedPrs}
+          description="PRs merged"
         />
         <Card
-          title={aggregatedData.additions + aggregatedData.deletions}
+          title={Object.keys(issueCommentsAggregatedData.commentsPerPr).length}
+          description="PRs reviewed"
+        />
+
+        <Card
+          title={pullRequestsAggregatedData.avgPrSize}
+          description="Avg. PR size"
+        />
+        <Card
+          title={issueCommentsAggregatedData.avgNumberOfCommentsPerPr}
+          description="Comments per review"
+        />
+        <Card
+          title={data?.viewer?.repositoriesContributedTo?.totalCount || 0}
+          description="Repositories contributed to"
+        />
+
+        <Card
+          title={
+            pullRequestsAggregatedData.additions +
+            pullRequestsAggregatedData.deletions
+          }
           description="Lines changed"
         />
-        <Card title={aggregatedData.additions} description="Additions" />
-        <Card title={aggregatedData.deletions} description="Deletions" />
-        <Card title={aggregatedData.avgPrSize} description="Average PR size" />
+        <Card
+          title={pullRequestsAggregatedData.additions}
+          description="Additions"
+        />
+        <Card
+          title={pullRequestsAggregatedData.deletions}
+          description="Deletions"
+        />
+
+        <Card
+          title={formatDate(pullRequestsAggregatedData.firstPrDate)}
+          description="First PR"
+        />
+        <Card
+          title={formatDate(issueCommentsAggregatedData.firstCommentDate)}
+          description="First comment"
+        />
+        <Card
+          title={
+            data?.viewer?.repositoriesContributedTo?.edges?.[0]?.node?.name ||
+            "..."
+          }
+          description="Popular repo contributed to"
+        />
       </div>
-      <ShareButton user={data?.viewer?.login || ""} />
+      {data && <ShareButton user={data?.viewer?.login || ""} />}
     </Main>
   );
 };
 
 function useGithubData() {
-  const queryResult = useQuery(query);
+  const queryResult = useQuery(query, {
+    variables: {
+      firstPullRequests: 100,
+      firstIssueComments: 100,
+    },
+  });
   const { data, loading, error, fetchMore } = queryResult;
 
   React.useEffect(() => {
@@ -100,21 +206,39 @@ function useGithubData() {
       !data ||
       error ||
       loading ||
-      !data.viewer.pullRequests.pageInfo.hasNextPage
+      (!data.viewer.pullRequests.pageInfo.hasNextPage &&
+        !data.viewer.issueComments.pageInfo.hasNextPage)
     ) {
       return;
     }
 
+    const variables = {
+      afterPullRequest: data.viewer.pullRequests.pageInfo.endCursor,
+      firstPullRequests:
+        data.viewer.pullRequests.pageInfo.endCursor !== null ? 100 : 0,
+
+      afterIssueComment: data.viewer.issueComments.pageInfo.endCursor,
+      firstIssueComments:
+        data.viewer.issueComments.pageInfo.endCursor !== null ? 100 : 0,
+    };
+
     fetchMore({
-      variables: {
-        after: data.viewer.pullRequests.pageInfo.endCursor,
-      },
+      variables,
       updateQuery: (prev, { fetchMoreResult }) => {
         if (!fetchMoreResult) return prev;
         return {
           ...fetchMoreResult,
           viewer: {
             ...fetchMoreResult.viewer,
+
+            issueComments: {
+              ...fetchMoreResult.viewer.issueComments,
+              edges: [
+                ...prev.viewer.issueComments.edges,
+                ...fetchMoreResult.viewer.issueComments.edges,
+              ],
+            },
+
             pullRequests: {
               ...fetchMoreResult.viewer.pullRequests,
               edges: [
@@ -131,32 +255,62 @@ function useGithubData() {
   return queryResult;
 }
 
+const paginationInfo = `
+    totalCount
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+`;
+
 const query = gql`
-  query($after: String) {
+  query($afterIssueComment: String, $firstIssueComments: Int!, $afterPullRequest: String, $firstPullRequests: Int!) {
     rateLimit {
       cost
       remaining
     }
     viewer {
       login
-      pullRequests(
-        first: 100
-        orderBy: { field: CREATED_AT, direction: DESC }
-        after: $after
-      ) {
-        totalCount
-        pageInfo {
-          hasNextPage
-          endCursor
-        }
+
+      contributionsCollection {
+        totalRepositoriesWithContributedCommits
+        totalRepositoriesWithContributedPullRequests
+      }
+
+      issueComments(first: $firstIssueComments, after: $afterIssueComment) {
+        ${paginationInfo}
         edges {
           cursor
           node {
-            title
+            createdAt
+            pullRequest {
+              id
+            }
+          }
+        }
+      }
+
+      pullRequests(
+        first: $firstPullRequests
+        orderBy: { field: CREATED_AT, direction: DESC }
+        after: $afterPullRequest
+      ) {
+        ${paginationInfo}
+        edges {
+          cursor
+          node {
             createdAt
             additions
             deletions
+            merged
           }
+        }
+      }
+
+      repositoriesContributedTo(first: 1, orderBy: {field: STARGAZERS, direction: DESC}) {
+        totalCount
+        nodes {
+          name
         }
       }
     }
