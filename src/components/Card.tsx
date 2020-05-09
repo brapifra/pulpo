@@ -12,7 +12,7 @@ export default ({ title, description }: Props) => {
       style={{ minWidth: 0, boxSizing: "border-box", height: 166 }}
     >
       <h4 style={{ marginBlockStart: "1.15em", marginBlockEnd: "1.15em" }}>
-        <b>{title.toLocaleString("en")}</b>
+        <b style={{ fontWeight: "bold" }}>{title.toLocaleString("en")}</b>
       </h4>
       <p>{description}</p>
     </div>
