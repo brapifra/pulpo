@@ -152,7 +152,7 @@ export default () => {
         />
         <Card
           title={data?.viewer?.repositoriesContributedTo?.totalCount || 0}
-          description="Repositories contributed to"
+          description="Repositories you've contributed to"
         />
 
         <Card
@@ -181,10 +181,9 @@ export default () => {
         />
         <Card
           title={
-            data?.viewer?.repositoriesContributedTo?.edges?.[0]?.node?.name ||
-            "..."
+            data?.viewer?.repositoriesContributedTo?.nodes?.[0]?.name || "..."
           }
-          description="Popular repo contributed to"
+          description="Most popular repo you've contributed to"
         />
       </div>
       {data && <ShareButton user={data?.viewer?.login || ""} />}
