@@ -3,6 +3,7 @@ import { Helmet } from "react-helmet";
 import useLocalStorage from "../hooks/useLocalStorage";
 import Main from "../layouts/Main";
 import Config from "../config";
+import ga from "../utils/ga";
 
 const GITHUB_REDIRECT_URL = `${Config.URL}/oauth/github`;
 
@@ -30,6 +31,7 @@ export default () => {
         style={{ marginTop: 16 }}
         className="btn"
         onClick={() => {
+          ga("send", "event", "Signin", "click", repoScope);
           const githubAuthorizeUrl = `${Config.GITHUB_AUTHORIZE_URL}?client_id=${Config.GITHUB_CLIENT_ID}&redirect_uri=${GITHUB_REDIRECT_URL}&scope=${repoScope}`;
 
           const popup = window.open(
