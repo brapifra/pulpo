@@ -18,6 +18,7 @@ export default ({ user }: { user: string }) => {
   );
 
   if (!shareButtonTitle) {
+    ga("send", "event", shareButtonTitle, "set", user);
     setShareButtonTitle(defaultTitle);
   }
 
