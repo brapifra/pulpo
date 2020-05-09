@@ -5,6 +5,7 @@ import Main from "../layouts/Main";
 import { useQuery } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
 import ShareButton from "../components/ShareButton";
+import ga from "../utils/ga";
 
 type PullRequestsAggregatedData = {
   additions: number;
@@ -23,6 +24,9 @@ type IssueCommentsAggregatedata = {
 
 export default () => {
   const { data, loading, error } = useGithubData();
+
+  const username: string | undefined = data?.viewer?.login;
+
   const hasMoreToFetch =
     !!data?.viewer?.pullRequests?.pageInfo?.hasNextPage ||
     !!data?.viewer?.issueComments?.pageInfo?.hasNextPage;
@@ -109,6 +113,12 @@ export default () => {
     );
   }, [data]);
 
+  React.useEffect(() => {
+    if (username) {
+      ga("send", "event", "statistics", "seen", username);
+    }
+  }, [username]);
+
   return (
     <Main>
       {error && (
@@ -186,7 +196,7 @@ export default () => {
           description="Most popular repo you've contributed to"
         />
       </div>
-      {data && <ShareButton user={data?.viewer?.login || ""} />}
+      {data && <ShareButton user={username || ""} />}
     </Main>
   );
 };
