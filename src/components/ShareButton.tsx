@@ -7,7 +7,7 @@ const defaultTitle = (() => {
     return "Share";
   }
 
-  return "Include this in your CV";
+  return "Add this to your resume";
 })();
 
 export default ({ user }: { user: string }) => {
@@ -22,7 +22,7 @@ export default ({ user }: { user: string }) => {
   }
 
   return (
-    <>
+    <div style={{ marginTop: 14, textAlign: "center" }}>
       {result && <p>{result}</p>}
       <button
         className="btn"
@@ -40,6 +40,6 @@ export default ({ user }: { user: string }) => {
       >
         {shareButtonTitle}
       </button>
-    </>
+    </div>
   );
 };
